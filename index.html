@@ -77,9 +77,9 @@
       transform-origin: left center;
       transform-style: preserve-3d;
 
-      transition:
-        transform 1.1s cubic-bezier(.22,.72,.22,1),
-        box-shadow 1.1s ease;
+      transition: none;
+      touch-action: none;
+      user-select: none;
 
       box-shadow:
         inset 12px 0 20px rgba(80, 65, 50, 0.06),
@@ -177,10 +177,32 @@
 
   <script>
     const book = document.getElementById("book");
+    const cover = document.querySelector(".cover");
+    let startX = 0;
+    let isDragging = false;
+    let currentX = 0;
+    cover.addEventListener("pointerdown", function(event) {
+      isDragging = true;
+      startX = event.clientX;
+      });
+    window.addEventListener("pointermove", function(event) {
+      if (!isDragging) return;
+      currentX = event.clientX;
+      const deltaX = currentX - startX;
+      const progress = Math.max(0, Math.min(1, -deltaX / 220));
+      cover.style.transform = `rotateY(${-155 * progress}deg)`;
+      });
+    window.addEventListener("pointerup", function() {
+      isDragging = false;
+      const deltaX = currentX - startX;
+      if (deltaX < -80) {
+        cover.style.transform = "rotateY(-155deg)";
+        } else {
+        cover.style.transform = "rotateY(0deg)";
+        }
+      });
 
-    book.addEventListener("click", function () {
-      book.classList.toggle("open");
-    });
+  
   </script>
 
 </body>
