@@ -184,6 +184,9 @@
     cover.addEventListener("pointerdown", function(event) {
       isDragging = true;
       startX = event.clientX;
+      currentX = startX;
+      cover.setPointerCapture(event.pointerId);
+      event.preventDefault();
       });
     window.addEventListener("pointermove", function(event) {
       if (!isDragging) return;
@@ -192,7 +195,7 @@
       const progress = Math.max(0, Math.min(1, -deltaX / 220));
       cover.style.transform = `rotateY(${-155 * progress}deg)`;
       });
-    window.addEventListener("pointerup", function() {
+    cover.addEventListener("pointerup", function() {
       isDragging = false;
       const deltaX = currentX - startX;
       if (deltaX < -80) {
